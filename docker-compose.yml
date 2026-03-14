@@ -1,14 +1,15 @@
 services:
   web:
-    build: .
+    image: 0xjunwei/odoo17-prod:latest
+    env_file:
+      - .env
     depends_on:
       - db
     ports:
       - "8069:8069"
-    env_file:
-      - .env
     volumes:
       - ./addons:/mnt/extra-addons
+      - ./filestore:/var/lib/odoo/filestore
       - odoo-web-data:/var/lib/odoo
 
   db:
