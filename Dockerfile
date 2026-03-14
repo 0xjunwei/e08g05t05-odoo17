@@ -1,13 +1,14 @@
-FROM odoo:17.0
+FROM odoo:17
 
 USER root
 
+# extra python packages for modules
 RUN pip3 install num2words xlwt
 
-COPY ./addons /mnt/extra-addons
+# copy entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-COPY ./config/odoo.conf /etc/odoo/odoo.conf
-
-RUN chown -R odoo:odoo /mnt/extra-addons
+ENTRYPOINT ["/entrypoint.sh"]
 
 USER odoo
