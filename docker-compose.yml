@@ -7,7 +7,6 @@ services:
       - db
     volumes:
       - ./addons:/mnt/extra-addons
-      - ./filestore:/var/lib/odoo/filestore
 
   db:
     image: postgres:13
