@@ -5,8 +5,6 @@ services:
       - .env
     depends_on:
       - db
-    volumes:
-      - ./addons:/mnt/extra-addons
 
   db:
     image: postgres:13
