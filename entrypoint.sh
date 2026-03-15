@@ -3,9 +3,8 @@ set -e
 
 echo "Fixing permissions.."
 
+mkdir -p /var/lib/odoo/filestore
 chown -R odoo:odoo /var/lib/odoo
-mkdir -p /mnt/extra-addons
-chown -R odoo:odoo /mnt/extra-addons
 
 echo "Generating odoo.conf..."
 
