@@ -52,6 +52,9 @@ jobs:
           script: |
             cd ~/odoo-staging
             git pull origin Staging
+            
+            docker volume create odoo-staging-web-data || true
+            docker volume create odoo-staging-db-data || true
 
             docker compose \
             -f docker-compose.yml \
@@ -73,6 +76,14 @@ jobs:
           script: |
             cd ~/odoo-prod
             git pull origin master
+
+            # Saving a rollback image incase
+            # docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest
+            # Restart the container using docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest
+            
+            docker volume create odoo-staging-web-data || true
+            docker volume create odoo-staging-db-data || true
 
             docker compose \
             -f docker-compose.yml \
