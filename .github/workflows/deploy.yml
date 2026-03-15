@@ -51,7 +51,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ~/odoo-staging
-            git pull origin staging
+            git pull origin Staging
             docker compose pull
             docker compose up -d
 
