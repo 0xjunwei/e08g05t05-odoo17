@@ -1,0 +1,19 @@
+name: odoo-prod
+
+services:
+  web:
+    image: 0xjunwei/odoo17-prod:latest
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-prod-web-data:/var/lib/odoo
+
+  db:
+    volumes:
+      - odoo-prod-db-data:/var/lib/postgresql/data
+
+volumes:
+  odoo-prod-web-data:
+    external: true
+  odoo-prod-db-data:
+    external: true
