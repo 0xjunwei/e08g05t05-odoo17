@@ -29,7 +29,7 @@ jobs:
           tags: 0xjunwei/odoo17-prod:latest
 
       - name: Build STAGING image
-        if: github.ref == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/Staging'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -43,7 +43,7 @@ jobs:
     steps:
 
       - name: Deploy staging
-        if: github.ref == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/Staging'
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VM_HOST }}
@@ -52,8 +52,16 @@ jobs:
           script: |
             cd ~/odoo-staging
             git pull origin Staging
-            docker compose pull
-            docker compose up -d
+
+            docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.staging.yml \
+            pull
+
+            docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.staging.yml \
+            up -d
 
       - name: Deploy production
         if: github.ref == 'refs/heads/master'
@@ -65,5 +73,13 @@ jobs:
           script: |
             cd ~/odoo-prod
             git pull origin master
-            docker compose pull
-            docker compose up -d
+
+            docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.prod.yml \
+            pull
+
+            docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.prod.yml \
+            up -d

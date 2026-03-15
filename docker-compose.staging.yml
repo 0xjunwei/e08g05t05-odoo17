@@ -1,0 +1,19 @@
+name: odoo-staging
+
+services:
+  web:
+    image: 0xjunwei/odoo17-staging:latest
+    ports:
+      - "8070:8069"
+    volumes:
+      - odoo-staging-web-data:/var/lib/odoo
+
+  db:
+    volumes:
+      - odoo-staging-db-data:/var/lib/postgresql/data
+
+volumes:
+  odoo-staging-web-data:
+    external: true
+  odoo-staging-db-data:
+    external: true
