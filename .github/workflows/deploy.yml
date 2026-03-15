@@ -75,6 +75,9 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ~/odoo-prod
+            
+            docker tag 0xjunwei/odoo17-prod:latest 0xjunwei/odoo17-prod:rollback || true
+
             git pull origin master
 
             # Saving a rollback image incase
@@ -94,3 +97,18 @@ jobs:
             -f docker-compose.yml \
             -f docker-compose.prod.yml \
             up -d
+
+            echo "Waiting for service health..."
+
+            sleep 30
+
+            if ! curl -f http://localhost:8069 ; then
+              echo "Deployment failed, rolling back..."
+
+              docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest
+
+              docker compose \
+              -f docker-compose.yml \
+              -f docker-compose.prod.yml \
+              up -d
+            fi

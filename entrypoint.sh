@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+echo "Fixing permissions.."
+
+chown -R odoo:odoo /var/lib/odoo
+mkdir -p /mnt/extra-addons
+chown -R odoo:odoo /mnt/extra-addons
+
 echo "Generating odoo.conf..."
 
 cat <<EOF > /etc/odoo/odoo.conf
