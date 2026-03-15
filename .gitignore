@@ -1,3 +1,5 @@
 .env
 filestore/
 /filestore/*
+addons/*
+addons/
