@@ -1,24 +1,28 @@
+name: odoo-staging
 services:
   web:
-    image: 0xjunwei/odoo17-prod:latest
+    restart: unless-stopped
+    image: 0xjunwei/odoo17-staging:latest
     env_file:
       - .env
     depends_on:
       - db
     ports:
-      - "8069:8069"
+      - "8070:8069"
     volumes:
       - ./addons:/mnt/extra-addons
       - ./filestore:/var/lib/odoo/filestore
-      - odoo-web-data:/var/lib/odoo
+      - odoo-staging-web-data:/var/lib/odoo
 
   db:
     image: postgres:13
     env_file:
       - .env
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data
+      - odoo-staging-db-data:/var/lib/postgresql/data
 
 volumes:
-  odoo-web-data:
-  odoo-db-data:
+  odoo-web-data-staging:
+    external: true
+  odoo-db-data-staging:
+    external: true

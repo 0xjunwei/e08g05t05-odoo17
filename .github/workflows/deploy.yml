@@ -2,7 +2,9 @@ name: Odoo CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - Staging
 
 jobs:
 
@@ -10,37 +12,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
 
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Login DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Login DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build PROD image
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: 0xjunwei/odoo17-prod:latest
 
-    - name: Build and push image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: 0xjunwei/odoo17-prod:latest
-
+      - name: Build STAGING image
+        if: github.ref == 'refs/heads/staging'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: 0xjunwei/odoo17-staging:latest
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH deploy to Azure VM
-      uses: appleboy/ssh-action@v1
-      with:
-        host: ${{ secrets.VM_HOST }}
-        username: ${{ secrets.VM_USER }}
-        key: ${{ secrets.VM_SSH_KEY }}
-        script: |
-          cd ~/e08g05t05-odoo17
-          git pull origin master
-          docker compose pull
-          docker compose up -d
+
+      - name: Deploy staging
+        if: github.ref == 'refs/heads/staging'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd ~/odoo-staging
+            git pull origin staging
+            docker compose pull
+            docker compose up -d
+
+      - name: Deploy production
+        if: github.ref == 'refs/heads/master'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd ~/odoo-prod
+            git pull origin master
+            docker compose pull
+            docker compose up -d
