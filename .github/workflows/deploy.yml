@@ -80,7 +80,7 @@ jobs:
             # Saving a rollback image incase
             # docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest
             # Restart the container using docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-            docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest
+            docker tag 0xjunwei/odoo17-prod:rollback 0xjunwei/odoo17-prod:latest || true
             
             docker volume create odoo-staging-web-data || true
             docker volume create odoo-staging-db-data || true
