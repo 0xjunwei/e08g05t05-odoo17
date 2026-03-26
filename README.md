@@ -1,5 +1,5 @@
 # Odoo  
-CI test: 26/03/2026
+CI test: 14/03/2026
 
 [![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
 [![Documentation](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/17.0)
